@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Calorie Counter</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <h1>Upload an Image to Count Calories</h1>
+        
+        <input type="file" id="imageUpload" accept="image/*">
+        
+        <div id="imagePreviewContainer" class="image-preview-container">
+            <img id="imagePreview" src="#" alt="Image Preview" class="image-preview"/>
+        </div>
+        
+        <button id="analyzeButton">Analyze Image</button>
+        
+        <div id="results" class="results-container">
+            <h2>Analysis Results:</h2>
+            <p id="analysisText">Waiting for analysis...</p>
+        </div>
+
+        <div id="loadingIndicator" class="loading-indicator" style="display: none;">
+            <p>Analyzing, please wait...</p>
+            <div class="spinner"></div>
+        </div>
+
+        <div id="errorMessages" class="error-messages" style="display: none;">
+            <p id="errorText"></p>
+        </div>
+    </div>
+
+    <script src="dist/main.js"></script> 
+</body>
+</html>
