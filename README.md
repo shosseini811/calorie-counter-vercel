@@ -142,3 +142,62 @@ Open your web browser and go to the URL provided by your frontend HTTP server (e
 *   **CORS**: The Flask backend has `Flask-CORS` enabled to allow requests from the frontend (which will be on a different port).
 *   **Error Handling**: Basic error handling is in place. Check the browser console and backend terminal for more detailed error messages if something goes wrong.
 *   **Simplification**: This is a simplified version. Production applications would require more robust error handling, security measures, user authentication, a database, better UI/UX, etc.
+
+## Deploying to Vercel
+
+This application can be deployed to Vercel by following these steps:
+
+### 1. Install Vercel CLI (Optional)
+
+You can use the Vercel CLI for deployment:
+
+```bash
+npm install -g vercel
+```
+
+### 2. Prepare Your Project
+
+The project has been configured for Vercel deployment with the following files:
+
+* `vercel.json` - Configuration for routing and builds
+* `backend/api/index.py` - Serverless API endpoint
+* Updated frontend code to use the correct API endpoints
+
+### 3. Set Up Environment Variables
+
+You'll need to set up your Gemini API key as an environment variable in Vercel:
+
+1. Create a Vercel account at [vercel.com](https://vercel.com) if you don't have one
+2. Install the Vercel CLI and login: `vercel login`
+3. Create a secret for your API key: `vercel secrets add gemini_api_key YOUR_ACTUAL_API_KEY`
+
+### 4. Deploy to Vercel
+
+You can deploy using one of these methods:
+
+#### Using Vercel CLI
+
+```bash
+vercel
+```
+
+Follow the prompts to deploy your project.
+
+#### Using Vercel Dashboard
+
+1. Push your code to a GitHub, GitLab, or Bitbucket repository
+2. Go to [vercel.com](https://vercel.com) and sign in
+3. Click "New Project" and import your repository
+4. Configure the project settings:
+   * Set the Framework Preset to "Other"
+   * Set the Root Directory to the project root
+   * Add your environment variable: `GEMINI_API_KEY` (link it to your secret)
+5. Click "Deploy"
+
+### 5. Verify Your Deployment
+
+Once deployed, Vercel will provide you with a URL for your application. Visit this URL to ensure everything is working correctly.
+
+### 6. Custom Domain (Optional)
+
+You can add a custom domain to your Vercel project through the Vercel dashboard under the "Domains" section of your project settings.

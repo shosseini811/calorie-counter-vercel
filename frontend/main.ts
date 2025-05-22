@@ -9,6 +9,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const errorMessagesDiv = document.getElementById('errorMessages') as HTMLDivElement;
     const errorTextP = document.getElementById('errorText') as HTMLParagraphElement;
 
+    console.log("Top_analysisText", analysisText.textContent);
     let currentFile: File | null = null;
 
     if (!imageUpload || !imagePreview || !analyzeButton || !analysisText || !resultsContainer || !imagePreviewContainer || !loadingIndicator || !errorMessagesDiv || !errorTextP) {
@@ -24,7 +25,17 @@ document.addEventListener('DOMContentLoaded', () => {
 
     imageUpload.addEventListener('change', (event) => {
         const files = (event.target as HTMLInputElement).files;
+        console.log("Event target", event.target);
+        console.log("Files", files);
+        // If files is indeed a FileList (a list of files), the .length property tells you how many files are in that list.
+        console.log("Files length", files?.length);
+        console.log("Current file", currentFile);
+        console.log("Image preview", imagePreview);
+        console.log("Image preview container", imagePreviewContainer);
+        console.log("Analyze button", analyzeButton);
+        console.log("Analysis text", analysisText);
         if (files && files.length > 0) {
+            console.log("Files_v2", files);
             currentFile = files[0];
             const reader = new FileReader();
             reader.onload = (e) => {
@@ -66,8 +77,9 @@ document.addEventListener('DOMContentLoaded', () => {
         analysisText.textContent = ''; // Clear previous analysis
 
         try {
-            // Make sure your backend is running on port 5001 or update this URL
-            const response = await fetch('http://localhost:5001/upload', {
+            // API endpoint that works both locally and when deployed
+            const apiUrl = window.location.hostname === 'localhost' ? 'http://localhost:5001/upload' : '/api/upload';
+            const response = await fetch(apiUrl, {
                 method: 'POST',
                 body: formData,
             });
@@ -84,9 +96,10 @@ document.addEventListener('DOMContentLoaded', () => {
             }
 
             const result = await response.json();
-            
+            console.log("result", result);
             if (result.analysis) {
                 analysisText.textContent = result.analysis;
+                console.log("analysisText", analysisText);
             } else if (result.error) {
                 analysisText.textContent = `Analysis Error: ${result.error}`;
             } else {
