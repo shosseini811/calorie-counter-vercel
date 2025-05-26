@@ -88,6 +88,5 @@ def upload_image():
 
     return jsonify({'error': 'Unknown error'}), 500
 
-# Handler function for Vercel
-def handler(request):
-    return app(request.environ, lambda status, headers: None)
+# For Vercel deployment, the app object is automatically handled
+# No custom handler function needed
