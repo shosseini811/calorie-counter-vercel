@@ -164,3 +164,4 @@ ENV/
 .venv/
 .env/
 .ENV/
+.vercel

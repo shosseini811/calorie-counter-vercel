@@ -1,203 +1,230 @@
-# Calorie Counter Web App
+# Calorie Counter Web App - Vercel Deployment
 
-This is a simplified web application that allows users to upload an image of food. The backend, built with Python and Flask, sends this image to the Google Gemini API for analysis, which then returns an estimated calorie count and identified food items. The frontend is built with TypeScript and basic HTML/CSS.
+This is a web application that allows users to upload food images for AI-powered calorie analysis. Built with Python Flask (serverless) backend and TypeScript frontend, optimized for **Vercel deployment**.
+
+🌐 **Live Demo**: [https://calorie-counter-vercel-lrd4zgumb-shosseini811s-projects.vercel.app](https://calorie-counter-vercel-lrd4zgumb-shosseini811s-projects.vercel.app)
+
+## Features
+
+- 📸 Upload food images for analysis
+- 🤖 AI-powered calorie estimation using Google Gemini API
+- 🍎 Food item identification
+- ⚡ Serverless backend deployment on Vercel
+- 📱 Responsive web interface
 
 ## Project Structure
 
 ```
-calorie-counter/
+calorie-counter-vercel/
 ├── backend/
-│   ├── app.py            # Flask backend logic
-│   ├── requirements.txt  # Python dependencies
-│   ├── .env.example      # Example for environment variables (API key)
-│   └── .env              # Actual environment variables (you need to create this)
+│   ├── api/
+│   │   └── index.py          # Vercel serverless function
+│   ├── app.py                # Local development server
+│   ├── vercel_app.py         # Alternative local server
+│   ├── requirements.txt      # Python dependencies
+│   ├── .env.example          # Environment variables template
+│   └── .env                  # Your API key (local only)
 ├── frontend/
-│   ├── index.html        # Main HTML page
-│   ├── style.css         # CSS for styling
-│   ├── main.ts           # TypeScript for frontend logic
-│   ├── tsconfig.json     # TypeScript compiler options
-│   └── dist/             # Compiled JavaScript (main.js will be here after compilation)
-└── README.md           # This file
+│   ├── index.html            # Main HTML page
+│   ├── style.css             # Styling
+│   ├── main.ts               # TypeScript source
+│   ├── main.js               # Compiled JavaScript (for deployment)
+│   └── tsconfig.json         # TypeScript configuration
+├── vercel.json               # Vercel deployment configuration
+├── package.json              # Node.js dependencies
+└── README.md                 # This file
 ```
 
 ## Prerequisites
 
-*   Python 3.7+
-*   Node.js and npm (for TypeScript compilation and serving frontend)
-*   A Google Gemini API Key
+- Google Gemini API Key ([Get one here](https://aistudio.google.com/app/apikey))
+- Vercel account ([Sign up here](https://vercel.com))
+- Node.js (for TypeScript compilation)
 
-## Setup Instructions
+## Quick Deploy to Vercel
 
-### 1. Clone the Repository (if applicable)
+### Method 1: One-Click Deploy (Recommended)
 
-If you haven't already, clone the project to your local machine.
+[![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https://github.com/your-username/calorie-counter-vercel)
 
-```bash
-# git clone <repository-url>
-cd calorie-counter
+### Method 2: Manual Deployment
+
+1. **Clone this repository**
+   ```bash
+   git clone <your-repo-url>
+   cd calorie-counter-vercel
+   ```
+
+2. **Install Vercel CLI**
+   ```bash
+   npm install -g vercel
+   ```
+
+3. **Login to Vercel**
+   ```bash
+   vercel login
+   ```
+
+4. **Deploy to Vercel**
+   ```bash
+   vercel --prod
+   ```
+
+5. **Set Environment Variable**
+   - Go to your [Vercel Dashboard](https://vercel.com/dashboard)
+   - Select your deployed project
+   - Navigate to **Settings** → **Environment Variables**
+   - Add: `GEMINI_API_KEY` = `your_actual_api_key`
+   - Click **Save**
+
+6. **Redeploy** (to apply environment variables)
+   ```bash
+   vercel --prod
+   ```
+
+## Local Development
+
+### Backend Setup
+
+1. **Navigate to backend directory**
+   ```bash
+   cd backend
+   ```
+
+2. **Install Python dependencies**
+   ```bash
+   pip install -r requirements.txt
+   ```
+
+3. **Set up environment variables**
+   ```bash
+   cp .env.example .env
+   # Edit .env and add your GEMINI_API_KEY
+   ```
+
+4. **Run local server**
+   ```bash
+   python app.py
+   ```
+   Server runs on `http://localhost:5001`
+
+### Frontend Setup
+
+1. **Compile TypeScript** (if modified)
+   ```bash
+   npx tsc frontend/main.ts --outDir frontend
+   ```
+
+2. **Serve frontend** (any HTTP server)
+   ```bash
+   cd frontend
+   python -m http.server 8080
+   ```
+   Frontend available at `http://localhost:8080`
+
+## How It Works
+
+### Architecture
+- **Frontend**: Static HTML/CSS/JS served by Vercel
+- **Backend**: Python Flask serverless function at `/api/upload`
+- **AI**: Google Gemini API for image analysis
+- **Deployment**: Fully serverless on Vercel
+
+### API Endpoints
+- `POST /api/upload` - Upload and analyze food images
+
+### Smart Environment Detection
+The frontend automatically detects the environment:
+- **Local**: Calls `http://localhost:5001/upload`
+- **Production**: Calls `/api/upload`
+
+## Usage
+
+1. 📸 **Upload Image**: Click "Choose File" and select a food image
+2. 👀 **Preview**: Image preview appears automatically
+3. 🔍 **Analyze**: Click "Analyze Image" button
+4. ⏳ **Wait**: AI processes the image (few seconds)
+5. 📊 **Results**: View calorie count and identified food items
+
+## Configuration Files Explained
+
+### `vercel.json`
+```json
+{
+  "version": 2,
+  "builds": [
+    {
+      "src": "frontend/**/*",
+      "use": "@vercel/static"
+    },
+    {
+      "src": "backend/api/index.py",
+      "use": "@vercel/python"
+    }
+  ],
+  "routes": [
+    {
+      "src": "/api/(.*)",
+      "dest": "backend/api/index.py"
+    },
+    {
+      "src": "/(.*)",
+      "dest": "frontend/$1"
+    }
+  ]
+}
 ```
 
-### 2. Backend Setup
+### Environment Variables
+- `GEMINI_API_KEY`: Your Google Gemini API key (required)
 
-Navigate to the backend directory:
+## Troubleshooting
 
-```bash
-cd backend
-```
+### Common Issues
 
-Create a virtual environment (recommended):
+1. **"GEMINI_API_KEY not found"**
+   - Ensure environment variable is set in Vercel dashboard
+   - Redeploy after adding environment variables
 
-```bash
-python3 -m venv venv
-source venv/bin/activate  # On Windows use `venv\Scripts\activate`
-```
+2. **"Failed to analyze image"**
+   - Check if API key is valid
+   - Verify image format (JPEG, PNG supported)
+   - Check Vercel function logs
 
-Install Python dependencies:
+3. **Frontend not loading**
+   - Ensure `main.js` is compiled from `main.ts`
+   - Check browser console for errors
 
-```bash
-pip install -r requirements.txt
-```
+### Viewing Logs
+- Go to Vercel Dashboard → Your Project → Functions tab
+- Click on the function to view logs and errors
 
-Set up your Gemini API Key:
+## Security Notes
 
-1.  Rename `.env.example` to `.env`.
-2.  Open the `.env` file and replace `YOUR_GEMINI_API_KEY_HERE` with your actual Google Gemini API key.
+- ✅ API key stored securely in Vercel environment variables
+- ✅ CORS enabled for cross-origin requests
+- ✅ No sensitive data exposed in frontend code
+- ⚠️ Never commit `.env` files to version control
 
-    ```
-    GEMINI_API_KEY=your_actual_api_key_goes_here
-    ```
+## Tech Stack
 
-    **Important**: You can obtain a Gemini API key from [Google AI Studio](https://aistudio.google.com/app/apikey).
+- **Frontend**: HTML5, CSS3, TypeScript/JavaScript
+- **Backend**: Python 3.9, Flask, Google Generative AI
+- **Deployment**: Vercel (Serverless)
+- **AI**: Google Gemini 2.5 Flash Preview
 
-### 3. Frontend Setup
+## Contributing
 
-Navigate to the frontend directory:
+1. Fork the repository
+2. Create a feature branch
+3. Make your changes
+4. Test locally and on Vercel
+5. Submit a pull request
 
-```bash
-cd ../frontend  # If you are in the backend directory
-# or cd frontend if you are in the root calorie-counter directory
-```
+## License
 
-Install TypeScript and a simple HTTP server (if you don't have one globally):
+MIT License - see LICENSE file for details
 
-```bash
-npm install typescript --save-dev
-npm install http-server -g # Or use any other local server you prefer
-```
+---
 
-Compile the TypeScript code:
-
-```bash
-npx tsc
-```
-
-This will compile `main.ts` and output `main.js` into a `dist` folder within the `frontend` directory, as specified in `tsconfig.json`.
-
-## Running the Application
-
-### 1. Start the Backend Server
-
-Navigate to the `backend` directory and run the Flask app:
-
-```bash
-cd backend # if not already there
-python app.py
-```
-
-The backend server will start, usually on `http://127.0.0.1:5001`.
-
-### 2. Start the Frontend Server
-
-Open a **new terminal window/tab**.
-
-Navigate to the `frontend` directory:
-
-```bash
-cd frontend # if not already there
-```
-
-Serve the `index.html` file using a simple HTTP server:
-
-```bash
-http-server .
-```
-
-This will typically serve the frontend on `http://127.0.0.1:8080` (or another port if 8080 is busy). The server will show you the exact URL.
-
-### 3. Access the Application
-
-Open your web browser and go to the URL provided by your frontend HTTP server (e.g., `http://127.0.0.1:8080`).
-
-## How to Use
-
-1.  Click the "Choose File" button to select an image of food from your computer.
-2.  A preview of the image will be displayed.
-3.  Click the "Analyze Image" button.
-4.  Wait for the Gemini API to process the image.
-5.  The estimated calorie count and identified food items will be displayed below the button.
-
-## Important Notes
-
-*   **API Key Security**: Never commit your actual `.env` file with the API key to a public repository.
-*   **CORS**: The Flask backend has `Flask-CORS` enabled to allow requests from the frontend (which will be on a different port).
-*   **Error Handling**: Basic error handling is in place. Check the browser console and backend terminal for more detailed error messages if something goes wrong.
-*   **Simplification**: This is a simplified version. Production applications would require more robust error handling, security measures, user authentication, a database, better UI/UX, etc.
-
-## Deploying to Vercel
-
-This application can be deployed to Vercel by following these steps:
-
-### 1. Install Vercel CLI (Optional)
-
-You can use the Vercel CLI for deployment:
-
-```bash
-npm install -g vercel
-```
-
-### 2. Prepare Your Project
-
-The project has been configured for Vercel deployment with the following files:
-
-* `vercel.json` - Configuration for routing and builds
-* `backend/api/index.py` - Serverless API endpoint
-* Updated frontend code to use the correct API endpoints
-
-### 3. Set Up Environment Variables
-
-You'll need to set up your Gemini API key as an environment variable in Vercel:
-
-1. Create a Vercel account at [vercel.com](https://vercel.com) if you don't have one
-2. Install the Vercel CLI and login: `vercel login`
-3. Create a secret for your API key: `vercel secrets add gemini_api_key YOUR_ACTUAL_API_KEY`
-
-### 4. Deploy to Vercel
-
-You can deploy using one of these methods:
-
-#### Using Vercel CLI
-
-```bash
-vercel
-```
-
-Follow the prompts to deploy your project.
-
-#### Using Vercel Dashboard
-
-1. Push your code to a GitHub, GitLab, or Bitbucket repository
-2. Go to [vercel.com](https://vercel.com) and sign in
-3. Click "New Project" and import your repository
-4. Configure the project settings:
-   * Set the Framework Preset to "Other"
-   * Set the Root Directory to the project root
-   * Add your environment variable: `GEMINI_API_KEY` (link it to your secret)
-5. Click "Deploy"
-
-### 5. Verify Your Deployment
-
-Once deployed, Vercel will provide you with a URL for your application. Visit this URL to ensure everything is working correctly.
-
-### 6. Custom Domain (Optional)
-
-You can add a custom domain to your Vercel project through the Vercel dashboard under the "Domains" section of your project settings.
+**Made with ❤️ for Vercel deployment**
