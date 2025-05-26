@@ -1,0 +1,15 @@
+{
+  "name": "calorie-counter-vercel",
+  "version": "1.0.0",
+  "description": "A calorie counter app using AI image analysis",
+  "scripts": {
+    "build": "tsc && cp frontend/*.html frontend/*.css dist/",
+    "dev": "tsc --watch",
+    "start": "python backend/app.py"
+  },
+  "devDependencies": {
+    "typescript": "^5.0.0",
+    "@types/node": "^20.0.0"
+  },
+  "dependencies": {}
+}

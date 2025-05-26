@@ -87,3 +87,7 @@ def upload_image():
             return jsonify({'error': str(e)}), 500
 
     return jsonify({'error': 'Unknown error'}), 500
+
+# Handler function for Vercel
+def handler(request):
+    return app(request.environ, lambda status, headers: None)
